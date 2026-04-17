@@ -41,7 +41,7 @@ export default function App() {
           Jayden
         </h1>
         <p className="animate-fade-rise-delay text-muted-foreground text-base sm:text-lg max-w-2xl mt-8 leading-relaxed">
-          For the deep thinkers, bold creators, and quiet rebels.
+          For the deep thinkers, bold creators, and quiet rebels.<br />
 I carve out space for clarity and meaningful, inspired work amid the chaos.
         </p>
         <button className="animate-fade-rise-delay-2 liquid-glass rounded-full px-14 py-5 text-base text-foreground mt-12 hover:scale-[1.03] transition-transform duration-300 cursor-pointer">
