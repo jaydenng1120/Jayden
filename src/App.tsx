@@ -18,7 +18,7 @@ export default function App() {
         playsInline
         className="fixed inset-0 w-full h-full object-cover z-0"
         style={{ objectPosition: 'center 40%' }}
-        src="/bg_video_2k.mp4"
+        src="/201195.mp4"
       />
 
       {/* Screen 1: Hero */}
