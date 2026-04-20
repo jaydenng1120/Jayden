@@ -1,5 +1,7 @@
-import React from 'react';
-import { Instagram, Facebook, Mail } from 'lucide-react';
+import React, { useState } from 'react';
+import { Instagram, Facebook, Mail, X } from 'lucide-react';
+import useEmblaCarousel from 'embla-carousel-react';
+import AutoScroll from 'embla-carousel-auto-scroll';
 
 const TikTokIcon = ({ className }: { className?: string }) => (
   <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -8,8 +10,50 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 );
 
 export default function App() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  
+  const [emblaRef1] = useEmblaCarousel({ loop: true, dragFree: true }, [
+    AutoScroll({ stopOnInteraction: false, stopOnMouseEnter: true, speed: 1.2, direction: 'forward' })
+  ]);
+  
+  const [emblaRef2] = useEmblaCarousel({ loop: true, dragFree: true }, [
+    AutoScroll({ stopOnInteraction: false, stopOnMouseEnter: true, speed: 1.2, direction: 'backward' })
+  ]);
+
+  const [socialEmblaRef1] = useEmblaCarousel({ loop: true, dragFree: true }, [
+    AutoScroll({ stopOnInteraction: false, stopOnMouseEnter: true, speed: 1.0, direction: 'forward' })
+  ]);
+  
+  const [socialEmblaRef2] = useEmblaCarousel({ loop: true, dragFree: true }, [
+    AutoScroll({ stopOnInteraction: false, stopOnMouseEnter: true, speed: 1.0, direction: 'backward' })
+  ]);
+
+  const studioImages = ['a.jpg', 'b.jpg', 'c.jpg', 'd.jpg', 'e.jpg', 'f.jpg', 'g.jpg', 'i.jpg', 't.jpg', '1.jpg', '3.jpg'];
+  const generatedStudio1 = Array.from({ length: 22 }).map((_, i) => studioImages[i % studioImages.length]);
+  const generatedStudio2 = Array.from({ length: 22 }).map((_, i) => studioImages[(i + 1) % studioImages.length]);
+
   return (
     <div className="relative w-full bg-background overflow-x-hidden">
+      {/* Lightbox */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button 
+            className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors"
+            onClick={() => setSelectedImage(null)}
+          >
+            <X className="w-10 h-10" />
+          </button>
+          <img 
+            src={selectedImage} 
+            alt="Enlarged view" 
+            className="max-w-full max-h-[90vh] object-contain rounded-lg"
+            onClick={(e) => e.stopPropagation()} 
+          />
+        </div>
+      )}
       {/* Fixed Video Background */}
       <video
         autoPlay
@@ -134,7 +178,7 @@ export default function App() {
         </a>
 
         {/* Bottom: 2-Row Sliders + Vision. Visual. Me text for Socials */}
-        <div className="relative w-full flex flex-col gap-6 pt-10 pb-20 mt-10">
+        <div className="relative w-full flex flex-col gap-6 py-10 mt-10">
           {/* Centered Overlay Text */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none mix-blend-difference z-20">
             <h2 
@@ -146,14 +190,14 @@ export default function App() {
           </div>
 
           {/* Row 1 (LTR) */}
-          <div className="flex w-full overflow-hidden marquee-container">
-            <div className="animate-marquee-reverse gap-6">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4].map((img, i) => (
+          <div className="overflow-hidden w-full cursor-grab active:cursor-grabbing" ref={socialEmblaRef1}>
+            <div className="flex gap-6 pl-6">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((img, i) => (
                 <img 
                   key={`r1-${i}`} 
-                  src={`https://picsum.photos/seed/a${img}/400/400?grayscale`} 
+                  src={`/${img}.jpg`} 
                   alt="Socials visual row 1"
-                  className="w-[120px] md:w-[160px] h-[120px] md:h-[160px] hover:w-[180px] md:hover:w-[240px] object-cover rounded-2xl shrink-0 grayscale hover:grayscale-0 transition-all duration-500" 
+                  className="flex-[0_0_auto] w-[120px] md:w-[160px] h-[120px] md:h-[160px] hover:w-[180px] md:hover:w-[240px] cursor-pointer object-cover rounded-2xl shrink-0 grayscale hover:grayscale-0 transition-all duration-500" 
                   referrerPolicy="no-referrer" 
                 />
               ))}
@@ -161,14 +205,14 @@ export default function App() {
           </div>
 
           {/* Row 2 (RTL) */}
-          <div className="flex w-full overflow-hidden marquee-container">
-            <div className="animate-marquee gap-6 relative right-[10%]">
-              {[8, 7, 6, 5, 4, 3, 2, 1, 8, 7, 6, 5, 4, 3, 2, 1, 8, 7, 6, 5].map((img, i) => (
+          <div className="overflow-hidden w-full cursor-grab active:cursor-grabbing" ref={socialEmblaRef2}>
+            <div className="flex gap-6 pl-6">
+              {[13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1].map((img, i) => (
                 <img 
                   key={`r2-${i}`} 
-                  src={`https://picsum.photos/seed/b${img}/400/400?grayscale`} 
+                  src={`/${img}.jpg`} 
                   alt="Socials visual row 2"
-                  className="w-[120px] md:w-[160px] h-[120px] md:h-[160px] hover:w-[180px] md:hover:w-[240px] object-cover rounded-2xl shrink-0 grayscale hover:grayscale-0 transition-all duration-500" 
+                  className="flex-[0_0_auto] w-[120px] md:w-[160px] h-[120px] md:h-[160px] hover:w-[180px] md:hover:w-[240px] cursor-pointer object-cover rounded-2xl shrink-0 grayscale hover:grayscale-0 transition-all duration-500" 
                   referrerPolicy="no-referrer" 
                 />
               ))}
@@ -190,16 +234,17 @@ export default function App() {
             Studio
           </h2>
 
-          <div className="w-full flex flex-col gap-6 relative max-w-[100vw] overflow-hidden marquee-container">
+          <div className="w-full flex flex-col gap-6 relative max-w-[100vw] overflow-hidden">
             {/* Row 1 (LTR) */}
-            <div className="flex w-full">
-              <div className="animate-marquee-reverse gap-6">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4].map((img, i) => (
+            <div className="overflow-hidden w-full cursor-grab active:cursor-grabbing" ref={emblaRef1}>
+              <div className="flex gap-6 pl-6">
+                {generatedStudio1.map((img, i) => (
                   <img 
                     key={`sr1-${i}`} 
-                    src={`https://picsum.photos/seed/s1${img}/400/280`} 
+                    src={`/studio/${img}`} 
                     alt="Studio visual row 1"
-                    className="w-[240px] md:w-[360px] h-[160px] md:h-[240px] hover:w-[280px] md:hover:w-[420px] object-cover rounded-2xl shrink-0 transition-all duration-500" 
+                    onClick={() => setSelectedImage(`/studio/${img}`)}
+                    className="flex-[0_0_auto] w-[240px] md:w-[360px] h-[160px] md:h-[240px] hover:scale-[1.02] cursor-pointer object-cover rounded-2xl shrink-0 transition-transform duration-500" 
                     referrerPolicy="no-referrer" 
                   />
                 ))}
@@ -207,14 +252,15 @@ export default function App() {
             </div>
 
             {/* Row 2 (RTL) */}
-            <div className="flex w-full">
-              <div className="animate-marquee gap-6 relative right-[10%]">
-                {[8, 7, 6, 5, 4, 3, 2, 1, 8, 7, 6, 5, 4, 3, 2, 1, 8, 7, 6, 5].map((img, i) => (
+            <div className="overflow-hidden w-full cursor-grab active:cursor-grabbing" ref={emblaRef2}>
+              <div className="flex gap-6 pl-6">
+                {generatedStudio2.map((img, i) => (
                   <img 
                     key={`sr2-${i}`} 
-                    src={`https://picsum.photos/seed/s2${img}/400/280`} 
+                    src={`/studio/${img}`} 
                     alt="Studio visual row 2"
-                    className="w-[240px] md:w-[360px] h-[160px] md:h-[240px] hover:w-[280px] md:hover:w-[420px] object-cover rounded-2xl shrink-0 transition-all duration-500" 
+                    onClick={() => setSelectedImage(`/studio/${img}`)}
+                    className="flex-[0_0_auto] w-[240px] md:w-[360px] h-[160px] md:h-[240px] hover:scale-[1.02] cursor-pointer object-cover rounded-2xl shrink-0 transition-transform duration-500" 
                     referrerPolicy="no-referrer" 
                   />
                 ))}
@@ -224,14 +270,14 @@ export default function App() {
         </section>
 
       {/* Screen 5: Footer / Ready to start */}
-      <section className="relative z-20 w-full bg-black flex flex-col items-center justify-center py-32 px-6">
+      <section className="relative z-20 w-full flex flex-col items-center justify-center py-32 px-6">
         <h2 
-          className="text-5xl md:text-6xl text-foreground font-normal tracking-tight mb-6"
+          className="text-5xl md:text-6xl text-foreground font-normal tracking-tight mb-2"
           style={{ fontFamily: "'Instrument Serif', serif" }}
         >
           ready to start?
         </h2>
-        <p className="text-muted-foreground text-lg mb-12" style={{ fontFamily: "'Instrument Serif', serif" }}>
+        <p className="text-muted-foreground text-lg mt-8 mb-5" style={{ fontFamily: "'Instrument Serif', serif" }}>
           drop an email.
         </p>
 
@@ -260,3 +306,4 @@ export default function App() {
     </div>
   );
 }
+
